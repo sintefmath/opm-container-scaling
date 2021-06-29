@@ -61,7 +61,7 @@ mpirun (Open MPI) 2.1.1
 Report bugs to http://www.open-mpi.org/community/help/
 ```
 
-At the time of writing, the closest matching module on IT4I is ```OpenMPI/2.1.1-GCC-7.3.0-2.30``` but this might change in the future. Use ```ml av``` to get a list of all available modules (ml also supports autocomplete with TAB). 
+At the time of writing, the closest matching module on IT4I is ```OpenMPI/2.1.1-GCC-7.3.0-2.30``` but this might change in the future. Use ```ml av``` to get a list of all available modules (```ml``` also supports autocomplete with TAB). 
 
 Create a new file called ```run_norne.sh``` with the following content
 
