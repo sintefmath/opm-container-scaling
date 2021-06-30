@@ -3,16 +3,13 @@ import datetime
 
 class Salomon:
 
-    def __init__(self, account_id, container_name, stored_container_name, runner = subprocess.run):
+    def __init__(self, account_id, container, runner = subprocess.run):
         self._account_id = account_id
         self._run = runner
-        self._container_name = container_name
-        self._stored_container_name = stored_container_name
+        self._container = container
 
     def pull_container(self):
-        self._run(["ml", "Singularity"], check=True)
-        self._run(["singularity", "pull", self._stored_container_name, 
-            self._container_name], check=True)
+        self._container.pull()
         
     def _load_modules_script(self):
         modulenames =  ["Singularity", "OpenMPI/2.1.1-GCC-7.3.0-2.30"]
@@ -31,11 +28,13 @@ class Salomon:
         assert threads == 1
         number_of_nodes = number_of_processes // procs_per_node
 
+        cmd_in_container = self._container(["flow", inputfile, f"--output-dir={outputdir}"])
+        cmd_in_container_str = " ".join(cmd_in_container)
         submission_script = f"""
 #!/bin/bash
 {self._load_modules_script()}
 
-mpiexec -np {number_of_processes} singularity exec -B $(pwd):$(pwd) --pwd $(pwd) {self._stored_container_name} flow {inputfile} --output-dir={outputdir}"
+mpiexec -np {number_of_processes} {cmd_in_container_str}"
         """
 
         output = self._run(['qsub', '-N', jobname, 
