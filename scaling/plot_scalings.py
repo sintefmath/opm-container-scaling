@@ -4,17 +4,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_scalings(configuration_file, skip_missing=True, save_to_file=None, show=True):
-    with open(configuration_file) as f:
-        configuration = json.load(f)
-    
-    runtimes = get_runtimes(configuration)
-    print(runtimes)
-    number_of_processes_list = np.array(list(map(int, configuration['number_of_processes_list'])), dtype=np.float64)
+def plot_scalings(configuration_files, skip_missing=True, save_to_file=None, show=True):
     
     
-    plt.loglog(number_of_processes_list,
-               runtimes, '-o', label=configuration_file)
+    symbols = ['-o', '-*', '-x']
+    for n, configuration_file in enumerate(configuration_files):
+        with open(configuration_file) as f:
+            configuration = json.load(f)
+    
+        runtimes = get_runtimes(configuration)
+
+        number_of_processes_list = np.array(list(map(int, configuration['number_of_processes_list'])), dtype=np.float64)
+        plt.loglog(number_of_processes_list,
+                   runtimes, symbols[n%len(symbols)], label=configuration_file)
+        
     plt.loglog(number_of_processes_list, 
                runtimes[0] * number_of_processes_list[0] * number_of_processes_list**(-1),
                '--', label='Ideal')

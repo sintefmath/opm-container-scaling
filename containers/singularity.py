@@ -9,11 +9,12 @@ class Singularity:
         
     def __call__(self, cmd, binds=[[os.getcwd(), os.getcwd()]], workdir=os.getcwd()):
         
-        commandlist = ['singularity', 'exec', self.stored_container_name]
+        commandlist = ['singularity', 'exec']
         for bind in binds:
             commandlist.extend(['-B', f"{bind[0]}:{bind[1]}"])
         
         commandlist.extend(['--pwd', workdir])
+        commandlist.append(self.stored_container_name)
         commandlist.extend(cmd)
 
         return commandlist
