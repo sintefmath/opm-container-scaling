@@ -8,11 +8,12 @@ class Docker:
         
     def __call__(self,cmd, binds=[[os.getcwd(), os.getcwd()]], workdir=os.getcwd()):
         
-        commandlist = ['docker', 'run', self.container_name]
+        commandlist = ['docker', 'run']
         for bind in binds:
             commandlist.extend(['-v', f"{bind[0]}:{bind[1]}"])
         
         commandlist.extend(['-w', workdir])
+        commandlist.append(self.container_name)
         commandlist.extend(cmd)
 
         return commandlist
