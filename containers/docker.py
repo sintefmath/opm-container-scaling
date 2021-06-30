@@ -10,7 +10,7 @@ class Docker:
         
         commandlist = ['docker', 'run', self.container_name]
         for bind in binds:
-            commandlist.extend(['-v', f"{bind[0]:bind[1]}"])
+            commandlist.extend(['-v', f"{bind[0]}:{bind[1]}"])
         
         commandlist.extend(['-w', workdir])
         commandlist.extend(cmd)
