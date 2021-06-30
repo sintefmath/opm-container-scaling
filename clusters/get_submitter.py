@@ -1,5 +1,8 @@
 import click
 import utils
+import argparse
+from . import it4i
+from . import bash
 
 def _get_cluster_name():
     import socket
@@ -11,20 +14,31 @@ def _get_cluster_name():
     else:
         raise Exception(f"Unknown clustername {fullname}.")
 
-@click.command()
-@click.option("--container_name", default="docker://openporousmedia/opmreleases", 
-    help="Name of the container to pull.")
-@click.option("--stored_container_name", default="docker://openporousmedia/opmreleases", 
-    help="Name of the container locally on cluster.")
-@click.option("--cluster_name", default="auto", help="Name of the cluster")
-def get_submitter(container_name, stored_container_name, inputfile, account_id, 
-    output_folder, cluster_name):
+def add_arguments_get_submitter(parser: argparse.ArgumentParser):
+    
+    parser.add_argument("--container_name", default="docker://openporousmedia/opmreleases", 
+        help="Name of the container to pull.")
+    parser.add_argument("--stored_container_name", default="opmreleases_latest.sif", 
+        help="Name of the container locally on cluster.")
+    parser.add_argument("--cluster_name", default="auto", help="Name of the cluster")
+
+    parser.add_argument("--account_id", required=True, type=str, help="Account ID for submission")
+
+    parser.add_argument('--dry_run', action='store_true', 
+                        help="Only print the commands to be run, do not actually run it.")
+    
+def get_submitter(*, container_name, stored_container_name, account_id, 
+     cluster_name, dry_run, **ignored_kw_args):
     if cluster_name.lower() == 'auto':
         cluster_name = _get_cluster_name()
     
-    runner = utils.get_runner()
-    if cluster_name == 'salomon.it4i.cz':
-        return it4i.Salomon(account_id, container_name, stored_container_name, runner)
+    runner = utils.get_runner(dry_run)
+    clusters = {
+        'salomon.it4i.cz' : it4i.Salomon,
+        'bash' : bash.BashSubmitter
+    }
+    if cluster_name in clusters.keys():
+        return clusters[cluster_name.lower()](account_id, container_name, stored_container_name, runner)
     else:
         raise Exception(f"Unknown cluster {cluster_name}.")
 

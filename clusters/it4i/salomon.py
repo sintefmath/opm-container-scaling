@@ -11,7 +11,7 @@ class Salomon:
 
     def pull_container(self):
         self._run(["ml", "Singularity"], check=True)
-        self._run(["singularity", "pull", self._stored_container_nameo, 
+        self._run(["singularity", "pull", self._stored_container_name, 
             self._container_name], check=True)
         
     def _load_modules_script(self):
@@ -19,10 +19,10 @@ class Salomon:
         return "\n".join(f"ml {modulename}" for modulename in modulenames)
 
     def __call__(self, *, inputfile, outputdir, jobname, number_of_processes,
-        threads=1, runtime=datetime.timedelta(seconds=60*60)):
+        threads=1, walltime=datetime.timedelta(seconds=60*60)):
 
 
-        walltime = str(runtime)
+        walltime = str(walltime)
         procs_per_node = 24
 
         # TODO Give a nice error message explaining the problem (or allow nodes that are not filled up)
@@ -32,10 +32,10 @@ class Salomon:
         number_of_nodes = number_of_processes // procs_per_node
 
         submission_script = f"""
-        #!/bin/bash
-        {self._load_modules_script()}
+#!/bin/bash
+{self._load_modules_script()}
 
-        mpiexec -np {number_of_processes} singularity exec -B $(pwd):$(pwd) --pwd $(pwd) flow {inputfile} --output-dir={outputdir}"
+mpiexec -np {number_of_processes} singularity exec -B $(pwd):$(pwd) --pwd $(pwd) {self._stored_container_name} flow {inputfile} --output-dir={outputdir}"
         """
 
         output = self._run(['qsub', '-N', jobname, 

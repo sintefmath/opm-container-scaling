@@ -1,13 +1,13 @@
 import click
 import subprocess
 
-def dry_run(cmd_list, check = False, text=False, input=None, encoding=None,
-    capture_output=False):
+def dry_run_function(cmd_list, check = False, text=False, input=None, encoding=None,
+    capture_output=False, stdout=None, stderr=None):
     print("#"*80)
     if input is not None:
-        print(f"Running with the following input:\n{input}\n\n")
+        print(f"Running with the following input:\n{'-'*80}\n{input}\n{'-'*80}\n\n")
     
-    print(f"Would run: {' '.join(cmd_list)}\n")
+    print(f"Would run:\n\t{' '.join(map(str, cmd_list))}\n")
     print("#"*80)
 
     if capture_output:
@@ -15,11 +15,8 @@ def dry_run(cmd_list, check = False, text=False, input=None, encoding=None,
             stdout='fake', stderr='fake')
 
 
-
-@click.command()
-@click.option("--dry_run", is_flag=True)
 def get_runner(dry_run):
     if dry_run:
-        return dry_run
+        return dry_run_function
     else:
         return subprocess.run
