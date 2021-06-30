@@ -28,7 +28,7 @@ class Salomon:
         assert threads == 1
         number_of_nodes = number_of_processes // procs_per_node
 
-        cmd_in_container = self._container(["flow", inputfile, f"--output-dir={outputdir}"])
+        cmd_in_container = self._container(["flow", inputfile, f"--threads-per-process={threads}", "--output-dir={outputdir}"])
         cmd_in_container_str = " ".join(cmd_in_container)
         submission_script = f"""
 #!/bin/bash

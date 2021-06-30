@@ -17,7 +17,7 @@ class BashSubmitter:
 
         outputfilename = f"{jobname}_output.txt"
         cmd = self._container(['mpiexec','-np', str(number_of_processes), 
-                        'flow', inputfile, f'--output-dir={outputdir}'])
+                        'flow', inputfile, f"--threads-per-process={threads}", f'--output-dir={outputdir}'])
         try:
             with open(outputfilename, 'w') as stdoutfile:
                 self._run(cmd, text=True,
