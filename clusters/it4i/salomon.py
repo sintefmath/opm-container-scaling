@@ -22,11 +22,9 @@ class Salomon:
         walltime = str(walltime)
         procs_per_node = 24
 
-        # TODO Give a nice error message explaining the problem (or allow nodes that are not filled up)
-        assert number_of_processes % procs_per_node == 0
         # TODO add support for threads
         assert threads == 1
-        number_of_nodes = number_of_processes // procs_per_node
+        number_of_nodes = (number_of_processes + procs_per_node - 1)// procs_per_node
 
         cmd_in_container = self._container(["flow", inputfile, f"--threads-per-process={threads}", "--output-dir={outputdir}"])
         cmd_in_container_str = " ".join(cmd_in_container)
