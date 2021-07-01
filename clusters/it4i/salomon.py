@@ -26,13 +26,13 @@ class Salomon:
         assert threads == 1
         number_of_nodes = (number_of_processes + procs_per_node - 1)// procs_per_node
 
-        cmd_in_container = self._container(["flow", inputfile, f"--threads-per-process={threads}", "--output-dir={outputdir}"])
+        cmd_in_container = self._container(["flow", inputfile, f"--threads-per-process={threads}", f"--output-dir={outputdir}"])
         cmd_in_container_str = " ".join(cmd_in_container)
         submission_script = f"""
 #!/bin/bash
 {self._load_modules_script()}
 
-mpiexec -np {number_of_processes} {cmd_in_container_str}"
+mpiexec -np {number_of_processes} {cmd_in_container_str}
         """
 
         output = self._run(['qsub', '-N', jobname, 
