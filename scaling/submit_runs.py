@@ -5,7 +5,7 @@ import argparse
 def add_arguments_submit_runs(parser: argparse.ArgumentParser):
     parser.add_argument("--inputfile", type=str, help="Input datafile (.DATA)")
     parser.add_argument("--jobname_base", required=True, help="Basename of job (will be {jobname_base}_{num_procs})")
-    parser.add_argument('--number_of_processes_list', nargs="+", required=True, help="List of number of processes to run.")
+    parser.add_argument('--number_of_processes_list', type=int, nargs="+", required=True, help="List of number of processes to run.")
     parser.add_argument('--outputdir_base', type=str, default='output')
 
 def submit_runs(submitter, *, inputfile, outputdir_base, jobname_base, number_of_processes_list,
