@@ -1,4 +1,3 @@
-import click
 import subprocess
 
 def dry_run_function(cmd_list, check = False, text=False, input=None, encoding=None,
