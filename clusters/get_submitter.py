@@ -11,6 +11,8 @@ def _get_cluster_name():
     # for IT4I/Salomon: 'login1.head.smc.salomon.it4i.cz'
     if fullname.endswith('salomon.it4i.cz'):
         return 'salomon.it4i.cz'
+    elif fullname.endswith('barbora.it4i.cz'):
+        return 'barbora.it4i.cz'
     else:
         raise Exception(f"Unknown clustername {fullname}.")
 
@@ -37,6 +39,7 @@ def get_submitter(*, container_type, container_name, stored_container_name, acco
     container = containers.get_container(container_type, runner, container_name, stored_container_name)    
     clusters = {
         'salomon.it4i.cz' : it4i.Salomon,
+        'barbora.it4i.cz' : it4i.Barbora,
         'bash' : bash.BashSubmitter
     }
     if cluster_name in clusters.keys():
