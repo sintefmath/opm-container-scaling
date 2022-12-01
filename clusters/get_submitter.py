@@ -13,6 +13,8 @@ def _get_cluster_name():
         return 'salomon.it4i.cz'
     elif fullname.endswith('barbora.it4i.cz'):
         return 'barbora.it4i.cz'
+    elif fullname.endswith('karolina.it4i.cz'):
+        return 'karolina.it4i.cz'
     else:
         raise Exception(f"Unknown clustername {fullname}.")
 
@@ -40,6 +42,7 @@ def get_submitter(*, container_type, container_name, stored_container_name, acco
     clusters = {
         'salomon.it4i.cz' : it4i.Salomon,
         'barbora.it4i.cz' : it4i.Barbora,
+        'karolina.it4i.cz': it4i.Karolina,
         'bash' : bash.BashSubmitter
     }
     if cluster_name in clusters.keys():
