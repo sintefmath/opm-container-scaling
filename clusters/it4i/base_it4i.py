@@ -10,7 +10,7 @@ class BaseIT4I:
         self._run = runner
         self._container = container
         self._procs_per_node = procs_per_node
-        self._extra_arguments = []
+        self._extra_arguments = extra_arguments
 
     def pull_container(self):
         self._container.pull()
