@@ -16,7 +16,7 @@ class BaseIT4I:
         self._container.pull()
         
     def _load_modules_script(self):
-        modulenames = ["Singularity", "OpenMPI/4.1.2-GCC-11.2.0"]
+        modulenames = ["apptainer", "OpenMPI/4.1.2-GCC-11.2.0"]
         return "\n".join(f"ml {modulename}" for modulename in modulenames)
 
     def __call__(self, *, inputfile, outputdir, jobname, number_of_processes,
