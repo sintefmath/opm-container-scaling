@@ -30,12 +30,22 @@ def add_arguments_get_submitter(parser: argparse.ArgumentParser):
 
     parser.add_argument('--dry_run', action='store_true', 
                         help="Only print the commands to be run, do not actually run it.")
+
+    parser.add_argument('--extra_argument_file', default=None, type=str, help="File with extra arguments to OPM Flow. Each argument should be line separated.")
     
 def get_submitter(*, container_type, container_name, stored_container_name, account_id, 
-     cluster_name, dry_run, **ignored_kw_args):
+     cluster_name, dry_run, extra_argument_file, **ignored_kw_args):
     if cluster_name.lower() == 'auto':
         cluster_name = _get_cluster_name()
 
+    extra_arguments = []
+    if extra_argument_file is not None:
+        
+        with open(extra_argument_file) as f:
+            for line in f:
+                if line.strip() != '':
+                    extra_arguments.append(line.strip())
+        
     
     runner = utils.get_runner(dry_run)
     container = containers.get_container(container_type, runner, container_name, stored_container_name)    
@@ -46,7 +56,7 @@ def get_submitter(*, container_type, container_name, stored_container_name, acco
         'bash' : bash.BashSubmitter
     }
     if cluster_name in clusters.keys():
-        return clusters[cluster_name.lower()](account_id, container, runner)
+        return clusters[cluster_name.lower()](account_id, container, runner, extra_arguments=extra_arguments)
     else:
         raise Exception(f"Unknown cluster {cluster_name}.")
 
