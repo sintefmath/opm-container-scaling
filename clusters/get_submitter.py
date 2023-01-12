@@ -74,6 +74,6 @@ def get_submitter(*, container_type, container_name, stored_container_name, acco
         'bash': bash.BashSubmitter
     }
     if cluster_name in clusters.keys():
-        return clusters[cluster_name.lower()](account_id, container, runner, extra_arguments=extra_arguments)
+        return clusters[cluster_name.lower()](account_id, container, runner, extra_arguments=extra_arguments, extra_modules=extra_modules)
     else:
         raise Exception(f"Unknown cluster {cluster_name}.")
