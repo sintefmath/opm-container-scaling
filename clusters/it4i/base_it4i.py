@@ -17,8 +17,11 @@ class BaseIT4I:
         self._container.pull()
 
     def _load_modules_script(self):
-        modulenames = ["apptainer", "OpenMPI/4.1.2-GCC-11.2.0"]
-        return "\n".join([f"ml {modulename}" for modulename in modulenames] + self._extra_modules)
+        if len(self._extra_modules) == 0:
+            modulenames = ["apptainer", "OpenMPI/4.1.2-GCC-11.2.0"]
+            return "\n".join([f"ml {modulename}" for modulename in modulenames])
+        else:
+            return "\n".join(self._extra_arguments)
 
     def __call__(self, *, inputfile, outputdir, jobname, number_of_processes,
                  threads=1, walltime=datetime.timedelta(seconds=60*60)):
