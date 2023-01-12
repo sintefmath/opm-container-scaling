@@ -8,16 +8,17 @@ def add_arguments_submit_runs(parser: argparse.ArgumentParser):
     parser.add_argument('--number_of_processes_list', type=int, nargs="+", required=True,
                         help="List of number of processes to run.")
     parser.add_argument('--outputdir_base', type=str, default='output')
+    parser.add_argument('--threads', type=int, default=1)
 
 
 def submit_runs(submitter, *, inputfile, outputdir_base, jobname_base, number_of_processes_list,
-                walltime, **ignored_kwargs):
+                walltime, threads, **ignored_kwargs):
     output_filenames = []
     for number_of_processes in number_of_processes_list:
         outputdir = f"{outputdir_base}_{number_of_processes}"
         jobname = f"{jobname_base}_{number_of_processes}"
         output_filename = submitter(inputfile=inputfile, outputdir=outputdir, jobname=jobname,
-                                    number_of_processes=number_of_processes, walltime=walltime)
+                                    number_of_processes=number_of_processes, walltime=walltime, threads=threads)
 
         output_filenames.append(output_filename)
 
