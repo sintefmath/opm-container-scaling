@@ -5,19 +5,20 @@ import os
 
 class BaseIT4I:
 
-    def __init__(self, account_id, container, procs_per_node, runner = subprocess.run, extra_arguments=[]):
+    def __init__(self, account_id, container, procs_per_node, runner = subprocess.run, extra_arguments=[], extra_modules=[]):
         self._account_id = account_id
         self._run = runner
         self._container = container
         self._procs_per_node = procs_per_node
         self._extra_arguments = extra_arguments
+        self._extra_modules = extra_modules
 
     def pull_container(self):
         self._container.pull()
         
     def _load_modules_script(self):
         modulenames = ["apptainer", "OpenMPI/4.1.2-GCC-11.2.0"]
-        return "\n".join(f"ml {modulename}" for modulename in modulenames)
+        return "\n".join([f"ml {modulename}" for modulename in modulenames] + self._extra_modules)
 
     def __call__(self, *, inputfile, outputdir, jobname, number_of_processes,
         threads=1, walltime=datetime.timedelta(seconds=60*60)):

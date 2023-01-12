@@ -4,10 +4,13 @@ import os
 
 class BashSubmitter:
 
-    def __init__(self, account_id, container, runner = subprocess.run, extra_arguments=[]):
+    def __init__(self, account_id, container, runner = subprocess.run, extra_arguments=[], extra_modules=[]):
         self._run = runner
         self._container = container
         self._extra_arguments = extra_arguments
+
+        # We do not use extra modules
+        assert len(extra_modules) == 0
 
     def pull_container(self):
         self._container.pull()
