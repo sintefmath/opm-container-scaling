@@ -21,7 +21,7 @@ class BaseIT4I:
             modulenames = ["apptainer", "OpenMPI/4.1.2-GCC-11.2.0"]
             return "\n".join([f"ml {modulename}" for modulename in modulenames])
         else:
-            return "\n".join(self._extra_arguments)
+            return "\n".join(self._extra_modules)
 
     def __call__(self, *, inputfile, outputdir, jobname, number_of_processes,
                  threads=1, walltime=datetime.timedelta(seconds=60*60)):
