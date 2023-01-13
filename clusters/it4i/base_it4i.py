@@ -51,5 +51,5 @@ mpiexec -np {number_of_processes} {cmd_in_container_str}
                             ], check=True, text=True,
                            input=submission_script, encoding='ascii', capture_output=True)
 
-        jobid = output.stdout.strip().replace('.isrv5', '')
-        return f"{jobname}.{jobid}"
+        jobid = output.stdout.strip().replace('.isrv5', '').replace('.infra-pbs', '')
+        return f"{jobname}.o{jobid}"
