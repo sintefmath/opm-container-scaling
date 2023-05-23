@@ -3,7 +3,7 @@ import os
 
 class Docker:
     def __init__(self, runner, container_name, stored_container_name):
-        self.container_name = container_name
+        self.container_name = container_name.replace("docker://", "")
         self._run = runner
         
     def __call__(self,cmd, binds=[[os.getcwd(), os.getcwd()]], workdir=os.getcwd()):
