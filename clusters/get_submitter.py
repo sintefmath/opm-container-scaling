@@ -38,23 +38,32 @@ def add_arguments_get_submitter(parser: argparse.ArgumentParser):
 
     parser.add_argument('--extra_argument_file', default=None, type=str,
                         help="File with extra arguments to OPM Flow. Each argument should be line separated.")
+    
+    parser.add_argument('--extra_mpi_argument_file', default=None, type=str,
+                        help="File with extra arguments to MPI. Each argument should be line separated.")
 
     parser.add_argument('--extra_module_file', default=None, type=str,
                         help="A file specifying extra commands to be run in the run script. This will typically be used to load moudles.")
 
 
 def get_submitter(*, container_type, container_name, stored_container_name, account_id,
-                  cluster_name, dry_run, extra_argument_file, extra_module_file, **ignored_kw_args):
+                  cluster_name, dry_run, extra_argument_file, extra_module_file, extra_mpi_argument_file, **ignored_kw_args):
     if cluster_name.lower() == 'auto':
         cluster_name = _get_cluster_name()
 
     extra_arguments = []
     if extra_argument_file is not None:
-
         with open(extra_argument_file) as f:
             for line in f:
                 if line.strip() != '':
                     extra_arguments.append(line.strip())
+
+    extra_mpi_arguments = []
+    if extra_mpi_argument_file is not None:
+        with open(extra_mpi_argument_file) as f:
+            for line in f:
+                if line.strip() != '':
+                    extra_mpi_arguments.append(line.strip())
 
     extra_modules = []
     if extra_module_file is not None:
@@ -74,6 +83,6 @@ def get_submitter(*, container_type, container_name, stored_container_name, acco
         'bash': bash.BashSubmitter
     }
     if cluster_name in clusters.keys():
-        return clusters[cluster_name.lower()](account_id, container, runner, extra_arguments=extra_arguments, extra_modules=extra_modules)
+        return clusters[cluster_name.lower()](account_id, container, runner, extra_arguments=extra_arguments, extra_modules=extra_modules, extra_mpi_arguments=extra_mpi_arguments)
     else:
         raise Exception(f"Unknown cluster {cluster_name}.")

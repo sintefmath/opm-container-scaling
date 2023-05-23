@@ -5,13 +5,14 @@ import os
 
 class BaseIT4I:
 
-    def __init__(self, account_id, container, procs_per_node, runner=subprocess.run, extra_arguments=[], extra_modules=[]):
+    def __init__(self, account_id, container, procs_per_node, runner=subprocess.run, extra_arguments=[], extra_modules=[], extra_mpi_arguments=[]):
         self._account_id = account_id
         self._run = runner
         self._container = container
         self._procs_per_node = procs_per_node
         self._extra_arguments = extra_arguments
         self._extra_modules = extra_modules
+        self._extra_mpi_arguments = extra_mpi_arguments
 
     def pull_container(self):
         self._container.pull()
@@ -42,7 +43,7 @@ class BaseIT4I:
 {self._load_modules_script()}
 cd {os.getcwd()}
 
-mpiexec -np {number_of_processes} {cmd_in_container_str}
+mpiexec {" ".join(self._extra_mpi_arguments)} -np {number_of_processes} {cmd_in_container_str}
         """
 
         output = self._run(['qsub', '-N', jobname,

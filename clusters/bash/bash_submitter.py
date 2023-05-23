@@ -4,10 +4,12 @@ import os
 
 class BashSubmitter:
 
-    def __init__(self, account_id, container, runner = subprocess.run, extra_arguments=[], extra_modules=[]):
+    def __init__(self, account_id, container, runner = subprocess.run, extra_arguments=[], extra_modules=[], extra_mpi_arguments=[]):
         self._run = runner
         self._container = container
         self._extra_arguments = extra_arguments
+        self._extra_mpi_arguments = extra_mpi_arguments
+        
 
         # We do not use extra modules
         assert len(extra_modules) == 0
@@ -20,7 +22,7 @@ class BashSubmitter:
 
 
         outputfilename = f"{jobname}_output.txt"
-        cmd = self._container(['mpiexec','-np', str(number_of_processes), 
+        cmd = self._container(['mpiexec',*self._extra_mpi_arguments, '-np', str(number_of_processes), 
                         'flow', inputfile, f"--threads-per-process={threads}", f'--output-dir={outputdir}', *self._extra_arguments])
         try:
             with open(outputfilename, 'w') as stdoutfile:
